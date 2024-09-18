@@ -5,3 +5,10 @@ Das Programm wird auf Windows 10 und Windows 11 getestet. Linux wird später fol
 Diese Releases mit den folgenden Eigenschaften sind verfügbar:
 - V1.0: Erste Releaste Version. Nur Kommanzozeilennutzung enthalten
 - V1.1: Zweite Release Version. Einfache GUI über Tkinter enthalten.
+
+<br>
+<br>
+<br>
+
+### So kann man in der Kommandozeile schnell per Notepad++ eine Datei des Ordners ändern:
+`.\edit.ps1 Sparbetrag_GUI.py`
