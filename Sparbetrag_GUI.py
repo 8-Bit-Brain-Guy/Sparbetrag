@@ -1,3 +1,4 @@
+from tkinter import *
 import tkinter as tk
 import os
 
@@ -44,14 +45,39 @@ def close_window(event):
 
 # Create the main window
 root = tk.Tk()
+root.geometry("400x330")
 root.title("Sparbetrag")
 
+# Zwei Frames benutzen: Links Eingabefelder und Ausgabe für Endbetrag; Rechts detailierte Übersicht des Anwachsens des Entbetrages.
+FrameLinks = tk.Frame(root)
+FrameLinks.pack()
+FrameLinks.pack(side = tk.LEFT)
+
+FrameRechts = tk.Frame(root)
+FrameRechts.pack()
+FrameRechts.pack(side = tk.RIGHT)
+
 # Eingabefelder erzeugen
-StartbetragEntry = tk.Entry(root)
-Sparbetrag_mtlEntry = tk.Entry(root)
-LaufzeitEntry = tk.Entry(root)
-ZinsenEntry = tk.Entry(root)
-EndbetragEntry = tk.Entry(root)
+StartbetragEntry = tk.Entry(FrameLinks)
+Sparbetrag_mtlEntry = tk.Entry(FrameLinks)
+LaufzeitEntry = tk.Entry(FrameLinks)
+ZinsenEntry = tk.Entry(FrameLinks)
+EndbetragEntry = tk.Entry(FrameLinks)
+
+
+# Textfeld erzeugen:
+Textfeld = tk.Text(master=FrameRechts, width=39, height=15, wrap='word')
+
+
+# Create labels for the entry fields
+label1 = tk.Label(FrameLinks, text="Startbetrag", anchor="e")
+label2 = tk.Label(FrameLinks, text="Sparbetrag (mtl)")
+label3 = tk.Label(FrameLinks, text="Laufzeit (Monate)")
+label4 = tk.Label(FrameLinks, text="Zinsen (jährl) (5% = 0.05)")
+label5 = tk.Label(FrameLinks, text="Endbetrag")
+label6 = tk.Label(FrameRechts, text="Details")
+
+
 
 # Insert default values into the entry fields
 StartbetragEntry.insert(0, "0.0")
@@ -77,12 +103,7 @@ ZinsenEntry.bind("<Return>", on_entry)
 # Bind the ESC key to close the window
 root.bind("<Escape>", close_window)
 
-# Create labels for the entry fields
-label1 = tk.Label(root, text="Startbetrag")
-label2 = tk.Label(root, text="Sparbetrag (mtl)")
-label3 = tk.Label(root, text="Laufzeit (Monate)")
-label4 = tk.Label(root, text="Zinsen (jährl) (5% = 0.05)")
-label5 = tk.Label(root, text="Endbetrag")
+
 
 
 # Pack the labels and entry fields into the window
@@ -96,6 +117,8 @@ label4.pack(padx=10, pady=5)
 ZinsenEntry.pack(padx=10, pady=5)
 label5.pack(padx=10, pady=5)
 EndbetragEntry.pack(padx=10, pady=5)
+label6.pack(side = tk.TOP, padx=10, pady=5)
+Textfeld.pack(side = tk.BOTTOM, padx=1, pady=5)
 
 # Start the Tkinter event loop
 os.system('cls')
