@@ -2,7 +2,7 @@ from tkinter import *
 import tkinter as tk
 import os
 
-### Parameter
+### Starting Parameters
 Endbetrag = 0
 Startbetrag = 0
 Sparbetrag_mtl = 250.0
@@ -20,14 +20,20 @@ def on_entry(event):
         Sparbetrag_mtlValue = (float)(Sparbetrag_mtlEntry.get())
         LaufzeitValue = (int)(LaufzeitEntry.get())
         ZinsenValue = (float)(ZinsenEntry.get())
-
+        print("StartbetragValue: %s" %StartbetragValue)
+        print("Startbetrag_mtlValue: %s" %Startbetrag_mtlValue)
+        print(Startbetrag_mtlValue)
+        print(LaufzeitValue)
+        print(ZinsenValue)
+        # print("%f    %f    %n    %f" %(StartbetragValue, Sparbetrag_mtlValue, LaufzeitValue, ZinsenValue))
         
         # Zinseszinsformel mit monatlicher Einzahlung E = r * q * (q^n-1) / (q-1)
         # r = monatl. rate
         # n = Einzahlungsdauer in Monaten
-        # q = Montatszinsfaktor == Zinsen/12
+        # q = Montatszinsfaktor == (1 + Zinsen/12)
+        q = 1 + Zinsen_mtl
         
-        EndbetragValue = Startbetrag + Sparbetrag_mtl * Zinsen_mtl * (pow(Zinsen_mtl, Laufzeit) - 1) / (Zinsen_mtl - 1)
+        EndbetragValue = Startbetrag + Sparbetrag_mtl * q * (pow(q, Laufzeit) - 1) / (q - 1)
         
         EndbetragEntry.delete(0, tk.END)  # Clear the second entry
         EndbetragEntry.insert(0, round(EndbetragValue, 2))   # Insert the value into the second entry
