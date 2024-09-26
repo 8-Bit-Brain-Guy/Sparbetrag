@@ -14,9 +14,9 @@ Zinsen = 0.05
 Zinsen_mtl = (Zinsen / 12)
 
 
-### Callback Funktionen
+#### Callback Funktionen
 def on_entry(event):
-    ### Die Werte aus den Edit-Feldern einlesen
+    #### Die Werte aus den Edit-Feldern einlesen
     if DEBUG:
         print("Die Callback-Funktion \"on entry\" wurde aufgerufen.")
         print((StartbetragEntry.get()))
@@ -34,7 +34,7 @@ def on_entry(event):
             print("Startbetrag    Sparbetrag (mtl.)    Laufzeit    Zinsen (jähl.)")
             print("%f    %f    %f    %f" %(StartbetragValue, Sparbetrag_mtlValue, LaufzeitValue, ZinsenValue))
 
-        ### Berechnen der Gesamtsumme zu Laufzeitende:
+        #### Berechnen der Gesamtsumme zu Laufzeitende:
         # Zinseszinsformel mit monatlicher Einzahlung E = r * q * (q^n-1) / (q-1)
         # r = monatl. rate
         # n = Einzahlungsdauer in Monaten
@@ -42,12 +42,12 @@ def on_entry(event):
         q = 1 + Zinsen_mtlValue
         EndbetragValue = StartbetragValue + Sparbetrag_mtlValue * q * (pow(q, LaufzeitValue) - 1) / (q - 1)
 
-        ### Clear the second entry
+        #### Clear the second entry
         EndbetragEntry.delete(0, tk.END)
         ### Insert the value into the second entry
         EndbetragEntry.insert(0, round(EndbetragValue, 2))
 
-        ### Textfeld mit Verlauf der Gesamtsumme füllen
+        #### Textfeld mit Verlauf der Gesamtsumme füllen
         Textfeld.delete(1.0, tk.END)
         #Textfeld.delete(0, tk.END)
         Textfeld.insert(END, "Monat     Wert\n")
@@ -57,8 +57,8 @@ def on_entry(event):
         for i in range(1, LaufzeitValue+1):
             Zwischenwert = Zwischenwert + (Zwischenwert * Zinsen_mtlValue)
             Monatsbetraege.append(Zwischenwert)
-            if ((i % 12 == 0) or (i in range(1, 12)) ):
-                Textfeld.insert(END, "%s         %s\n" % (i, round(Zwischenwert, 2)))
+            #if ((i % 12 == 0) or (i in range(1, 12)) ):
+            Textfeld.insert(END, "%s         %s\n" % (i, round(Zwischenwert, 2)))
 
             Zwischenwert = Zwischenwert + Sparbetrag_mtlValue
 
@@ -69,17 +69,17 @@ def on_entry(event):
 
 
 def close_window(event):
-    ### Close the window when ESC is pressed
+    #### Close the window when ESC is pressed
     root.destroy()
 
 
 
-### Create the main window
+#### Create the main window
 root = tk.Tk()
 root.geometry("430x450")
 root.title("Sparbetrag")
 
-### Zwei Frames benutzen: Links Eingabefelder und Ausgabe für Endbetrag; Rechts detailierte Übersicht des Anwachsens des Entbetrages.
+#### Zwei Frames benutzen: Links Eingabefelder und Ausgabe für Endbetrag; Rechts detailierte Übersicht des Anwachsens des Entbetrages.
 FrameLinks = tk.Frame(root)
 FrameLinks.pack()
 FrameLinks.pack(side = tk.LEFT)
@@ -88,7 +88,7 @@ FrameRechts = tk.Frame(root)
 FrameRechts.pack()
 FrameRechts.pack(side = tk.RIGHT)
 
-### Eingabefelder erzeugen
+#### Eingabefelder erzeugen
 StartbetragEntry = tk.Entry(FrameLinks)
 Sparbetrag_mtlEntry = tk.Entry(FrameLinks)
 LaufzeitEntry = tk.Entry(FrameLinks)
@@ -96,10 +96,14 @@ ZinsenEntry = tk.Entry(FrameLinks)
 EndbetragEntry = tk.Entry(FrameLinks)
 
 
-### Textfeld erzeugen:
-Textfeld = tk.Text(master=FrameRechts, width=39, height=23  , wrap='word')
+#### Textfeld erzeugen:
+Textfeld = tk.Text(master=FrameRechts, width=39, height=23, wrap='word')
+S = Scrollbar(master=FrameRechts)
+S.pack(side=RIGHT, fill=Y)
+S.config(command=Textfeld.yview)
+Textfeld.config(yscrollcommand=S.set)
 
-### Labels für die Eingabefelder erzeugen
+#### Labels für die Eingabefelder erzeugen
 label1 = tk.Label(FrameLinks, text="Startbetrag", anchor="e")
 label2 = tk.Label(FrameLinks, text="Sparbetrag (mtl)")
 label3 = tk.Label(FrameLinks, text="Laufzeit (Monate)")
@@ -107,14 +111,14 @@ label4 = tk.Label(FrameLinks, text="Zinsen (jährl) (5% = 0.05)")
 label5 = tk.Label(FrameLinks, text="Endbetrag")
 label6 = tk.Label(FrameRechts, text="Details")
 
-### Default Werte in die Eingabefelder einfügen
+#### Default Werte in die Eingabefelder einfügen
 StartbetragEntry.insert(0, "0.0")
 Sparbetrag_mtlEntry.insert(0, "250.0")
 LaufzeitEntry.insert(0, "120")
 ZinsenEntry.insert(0, "0.05")
 EndbetragEntry.insert(0, "")
 
-### Bind the first entry field to capture 'Tab' or 'Enter' key events
+#### Bind the first entry field to capture 'Tab' or 'Enter' key events
 StartbetragEntry.bind("<Tab>", on_entry)
 Sparbetrag_mtlEntry.bind("<Tab>", on_entry)
 LaufzeitEntry.bind("<Tab>", on_entry)
@@ -125,10 +129,10 @@ Sparbetrag_mtlEntry.bind("<Return>", on_entry)
 LaufzeitEntry.bind("<Return>", on_entry)
 ZinsenEntry.bind("<Return>", on_entry)
 
-### Bind the ESC key to close the window
+#### Bind the ESC key to close the window
 root.bind("<Escape>", close_window)
 
-### Pack the labels and entry fields into the window
+#### Pack the labels and entry fields into the window
 label1.pack(padx=10, pady=5)
 StartbetragEntry.pack(padx=10, pady=5)
 label2.pack(padx=10, pady=5)
@@ -142,7 +146,7 @@ EndbetragEntry.pack(padx=10, pady=5)
 label6.pack(side = tk.TOP, padx=10, pady=5)
 Textfeld.pack(side = tk.TOP, padx=5, pady=5)
 
-### Start the Tkinter event loop
+#### Start the Tkinter event loop
 os.system('cls')
 root.mainloop()
 
