@@ -11,7 +11,7 @@ Zinsen_mtl = (Zinsen / 12)
 ### Berechnung
 Endbetrag = Startbetrag
 Monatsbetraege = []
-for i in range(Laufzeit+1):    
+for i in range(Laufzeit+1):
     Endbetrag = Endbetrag + (Endbetrag * Zinsen_mtl) + Sparbetrag_mtl
     Monatsbetraege.append(Endbetrag)
 
@@ -28,7 +28,7 @@ print("Zinsen:          %.2f" %Zinsen)
 print("\n")
 print("Analyse:")
 print("Monat        Betrag aktuell:")
-for i in range(len(Monatsbetraege)):    
+for i in range(len(Monatsbetraege)):
     if (i % 12 == 0):
         print("%d            %.2f" %(i, Monatsbetraege[i]))
 
