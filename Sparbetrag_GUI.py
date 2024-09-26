@@ -2,7 +2,10 @@ from tkinter import *
 import tkinter as tk
 import os
 
-### Starting Parameters
+### Diese Flag kann aktiviert werden um das Debugging zu vereinfachen:
+DEBUG = False
+
+### Startparameter
 Endbetrag = 0
 Startbetrag = 0
 Sparbetrag_mtl = 250.0
@@ -11,45 +14,52 @@ Zinsen = 0.05
 Zinsen_mtl = (Zinsen / 12)
 
 
-
-
 def on_entry(event):
-    # Get the value from the entries and set it in the second entry
+    ### Die Werte aus den Edit-Feldern einlesen
+    if DEBUG:
+        print("Die Callback-Funktion \"on entry\" wurde aufgerufen.")
+        print((StartbetragEntry.get()))
+        print((Sparbetrag_mtlEntry.get()))
+        print((LaufzeitEntry.get()))
+        print((ZinsenEntry.get()))
+
     try:
         StartbetragValue = (float)(StartbetragEntry.get())
         Sparbetrag_mtlValue = (float)(Sparbetrag_mtlEntry.get())
         LaufzeitValue = (int)(LaufzeitEntry.get())
         ZinsenValue = (float)(ZinsenEntry.get())
-        print("StartbetragValue: %s" %StartbetragValue)
-        print("Startbetrag_mtlValue: %s" %Startbetrag_mtlValue)
-        print(Startbetrag_mtlValue)
-        print(LaufzeitValue)
-        print(ZinsenValue)
-        # print("%f    %f    %n    %f" %(StartbetragValue, Sparbetrag_mtlValue, LaufzeitValue, ZinsenValue))
-        
+        if DEBUG:
+            print("Startbetrag    Sparbetrag (mtl.)    Laufzeit    Zinsen (jähl.)")
+            print("%f    %f    %f    %f" %(StartbetragValue, Sparbetrag_mtlValue, LaufzeitValue, ZinsenValue))
+
+        ### Berechnen der Gesamtsumme zu Laufzeitende:
         # Zinseszinsformel mit monatlicher Einzahlung E = r * q * (q^n-1) / (q-1)
         # r = monatl. rate
         # n = Einzahlungsdauer in Monaten
         # q = Montatszinsfaktor == (1 + Zinsen/12)
         q = 1 + Zinsen_mtl
-        
-        EndbetragValue = Startbetrag + Sparbetrag_mtl * q * (pow(q, Laufzeit) - 1) / (q - 1)
-        
-        EndbetragEntry.delete(0, tk.END)  # Clear the second entry
-        EndbetragEntry.insert(0, round(EndbetragValue, 2))   # Insert the value into the second entry
-    except:
-        EndbetragEntry.delete(0, tk.END)  # Clear the second entry
-        EndbetragEntry.insert(0, "Fehler")   # Insert the value into the second entry
+        EndbetragValue = StartbetragValue + Sparbetrag_mtlValue * q * (pow(q, LaufzeitValue) - 1) / (q - 1)
 
+        ### Clear the second entry
+        EndbetragEntry.delete(0, tk.END)
+        ### Insert the value into the second entry
+        EndbetragEntry.insert(0, round(EndbetragValue, 2))
+
+        ### Textfeld mit Verlauf der Gesamtsumme füllen
+        Textfeld.insert(END, "Test\n")
+
+    except:
+        EndbetragEntry.delete(0, tk.END)
+        EndbetragEntry.insert(0, "Fehler")
 
 
 def close_window(event):
-    # Close the window when ESC is pressed
+    ### Close the window when ESC is pressed
     root.destroy()
 
 
 
-# Create the main window
+### Create the main window
 root = tk.Tk()
 root.geometry("400x330")
 root.title("Sparbetrag")
