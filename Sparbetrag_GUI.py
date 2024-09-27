@@ -5,10 +5,20 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import os
 
-### Diese Flag kann aktiviert werden um das Debugging zu vereinfachen:
+#### Diese Flag kann aktiviert werden um das Debugging zu vereinfachen:
 DEBUG = False
 
-### Startparameter
+#### GUI Parameter
+padxLabel = 5
+padyLabel = 5
+padxEntry = 5
+padyEntry = 5
+padxTextfeld = 5
+padyTextfeld = 5
+padxCanvas = 5
+padyCanvas = 5
+
+#### Startwerte
 Endbetrag = 0
 Startbetrag = 0
 Sparbetrag_mtl = 250.0
@@ -88,42 +98,38 @@ root = tk.Tk()
 #root.geometry("850x450")
 root.title("Sparbetrag")
 
-#### Zwei Frames benutzen: Links Eingabefelder und Ausgabe für Endbetrag; Rechts detailierte Übersicht des Anwachsens des Entbetrages.
-FrameLinks = tk.Frame(root)
-FrameMitte = tk.Frame(root)
-FrameRechts = tk.Frame(root)
 
 #### Eingabefelder erzeugen
-StartbetragEntry = tk.Entry(FrameLinks)
-Sparbetrag_mtlEntry = tk.Entry(FrameLinks)
-LaufzeitEntry = tk.Entry(FrameLinks)
-ZinsenEntry = tk.Entry(FrameLinks)
-EndbetragEntry = tk.Entry(FrameLinks)
+StartbetragEntry = tk.Entry(root)
+Sparbetrag_mtlEntry = tk.Entry(root)
+LaufzeitEntry = tk.Entry(root)
+ZinsenEntry = tk.Entry(root)
+EndbetragEntry = tk.Entry(root)
 
 #### Textfeld und Scrollbar erzeugen:
-Textfeld = scrolledtext.ScrolledText(master=FrameMitte, width=30, height=20, wrap='word')
+Textfeld = scrolledtext.ScrolledText(master=root, width=30, height=20, wrap='word')
 
 #### Erstelle ein Figure-Objekt und Canvas Objektes zum Plotten der berechneten Werte
-fig = Figure(figsize=(5, 4), dpi=100)
+fig = Figure(figsize=(5, 4), dpi=80)
 #### Füge eine Subplot-Achse hinzu
 ax = fig.add_subplot(111)
 ax.set(xlabel='Monat', ylabel='Sparbetrag')
 ax.grid()
 
 #### Einfügen der Figure in das Tkinter-Fenster
-canvas = FigureCanvasTkAgg(fig, master=FrameRechts)
+canvas = FigureCanvasTkAgg(fig, master=root)
 #### Rendern des Diagramms
 canvas.draw()
 
 
 #### Labels für die Eingabefelder erzeugen
-label1 = tk.Label(FrameLinks, text="Startbetrag", anchor="e")
-label2 = tk.Label(FrameLinks, text="Sparbetrag (mtl)")
-label3 = tk.Label(FrameLinks, text="Laufzeit (Monate)")
-label4 = tk.Label(FrameLinks, text="Zinsen (jährl) (5% = 0.05)")
-label5 = tk.Label(FrameLinks, text="Endbetrag")
-label6 = tk.Label(FrameMitte, text="Details")
-label7 = tk.Label(FrameRechts, text="Verlauf")
+label1 = tk.Label(root, text="Startbetrag", anchor="e")
+label2 = tk.Label(root, text="Sparbetrag (mtl)")
+label3 = tk.Label(root, text="Laufzeit (Monate)")
+label4 = tk.Label(root, text="Zinsen (jährl) (5% = 0.05)")
+label5 = tk.Label(root, text="Endbetrag")
+label6 = tk.Label(root, text="Details")
+label7 = tk.Label(root, text="Verlauf")
 
 #### Default Werte in die Eingabefelder einfügen
 StartbetragEntry.insert(0, "0.0")
@@ -146,33 +152,26 @@ ZinsenEntry.bind("<Return>", on_entry)
 #### Bind the ESC key to close the window
 root.bind("<Escape>", close_window)
 
-#### Pack the labels and entry fields into the window
-#### Alles packen
-FrameLinks.pack(side = tk.LEFT)
-FrameMitte.pack(side = tk.LEFT)
-FrameRechts.pack(side = tk.RIGHT)
+#### Alles per Grid im Fenster anordnen. Die Fenstergröße passt sich automatisch an die belegte Fläche der Elemente an.
+label1.grid(row=0, column=0, padx=padxLabel, pady=padyLabel)
+StartbetragEntry.grid(row=1, column=0, padx=padxEntry, pady=padyEntry)
+label2.grid(row=2, column=0, padx=padxLabel, pady=padyLabel)
+Sparbetrag_mtlEntry.grid(row=3, column=0, padx=padxEntry, pady=padyEntry)
+label3.grid(row=4, column=0, padx=padxLabel, pady=padyLabel)
+LaufzeitEntry.grid(row=5, column=0, padx=padxEntry, pady=padyEntry)
+label4.grid(row=6, column=0, padx=padxLabel, pady=padyLabel)
+ZinsenEntry.grid(row=7, column=0, padx=padxEntry, pady=padyEntry)
+label5.grid(row=8, column=0, padx=padxLabel, pady=padyLabel)
+EndbetragEntry.grid(row=9, column=0, padx=padxEntry, pady=padyEntry)
 
-label1.pack(padx=10, pady=5)
-StartbetragEntry.pack(padx=10, pady=5)
+label6.grid(row=0, column=1, padx=padxLabel, pady=padyLabel)
+Textfeld.grid(row=1, column=1, rowspan=9, padx=padxTextfeld, pady=padyTextfeld)
+label7.grid(row=0, column=2, padx=padxLabel, pady=padyLabel)
+canvas.get_tk_widget().grid(row=1, column=2, rowspan=9, padx=padxCanvas, pady=padyCanvas)
 
-label2.pack(padx=10, pady=5)
-Sparbetrag_mtlEntry.pack(padx=10, pady=5)
 
-label3.pack(padx=10, pady=5)
-LaufzeitEntry.pack(padx=10, pady=5)
-
-label4.pack(padx=10, pady=5)
-ZinsenEntry.pack(padx=10, pady=5)
-
-label5.pack(padx=10, pady=5)
-EndbetragEntry.pack(padx=10, pady=5)
-
-label6.pack(side = tk.TOP, padx=10, pady=5)
-Textfeld.pack(side = tk.TOP, padx=5, pady=5)
-
-label7.pack(side = tk.TOP, padx=10, pady=5)
-canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
-
-#### Start the Tkinter event loop
+######################################
+#### Start the Tkinter event loop ####
+######################################
 os.system('cls')
 root.mainloop()
