@@ -107,7 +107,7 @@ ZinsenEntry = tk.Entry(root)
 EndbetragEntry = tk.Entry(root)
 
 #### Textfeld und Scrollbar erzeugen:
-Textfeld = scrolledtext.ScrolledText(master=root, width=30, height=20, wrap='word')
+Textfeld = scrolledtext.ScrolledText(master=root, width=30, height=18, wrap='word')
 
 #### Erstelle ein Figure-Objekt und Canvas Objektes zum Plotten der berechneten Werte
 fig = Figure(figsize=(5, 4), dpi=80)
@@ -123,13 +123,15 @@ canvas.draw()
 
 
 #### Labels für die Eingabefelder erzeugen
-label1 = tk.Label(root, text="Startbetrag", anchor="e")
+#label0 = tk.Label(root)
+label1 = tk.Label(root, text="Startbetrag")
 label2 = tk.Label(root, text="Sparbetrag (mtl)")
 label3 = tk.Label(root, text="Laufzeit (Monate)")
 label4 = tk.Label(root, text="Zinsen (jährl) (5% = 0.05)")
 label5 = tk.Label(root, text="Endbetrag")
 label6 = tk.Label(root, text="Details")
 label7 = tk.Label(root, text="Verlauf")
+#label8 = tk.Label(root)
 
 #### Default Werte in die Eingabefelder einfügen
 StartbetragEntry.insert(0, "0.0")
@@ -153,6 +155,7 @@ ZinsenEntry.bind("<Return>", on_entry)
 root.bind("<Escape>", close_window)
 
 #### Alles per Grid im Fenster anordnen. Die Fenstergröße passt sich automatisch an die belegte Fläche der Elemente an.
+#label0.grid(row=0, column=0, columnspan=3, padx=padxLabel, pady=padyLabel)
 label1.grid(row=0, column=0, padx=padxLabel, pady=padyLabel)
 StartbetragEntry.grid(row=1, column=0, padx=padxEntry, pady=padyEntry)
 label2.grid(row=2, column=0, padx=padxLabel, pady=padyLabel)
@@ -168,6 +171,7 @@ label6.grid(row=0, column=1, padx=padxLabel, pady=padyLabel)
 Textfeld.grid(row=1, column=1, rowspan=9, padx=padxTextfeld, pady=padyTextfeld)
 label7.grid(row=0, column=2, padx=padxLabel, pady=padyLabel)
 canvas.get_tk_widget().grid(row=1, column=2, rowspan=9, padx=padxCanvas, pady=padyCanvas)
+#label8.grid(row=10, column=0, columnspan=3, padx=padxLabel, pady=padyLabel)
 
 
 ######################################
