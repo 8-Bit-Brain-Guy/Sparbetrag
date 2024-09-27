@@ -1,5 +1,8 @@
 from tkinter import *
+from tkinter import scrolledtext
 import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 import os
 
 ### Diese Flag kann aktiviert werden um das Debugging zu vereinfachen:
@@ -29,7 +32,7 @@ def on_entry(event):
         Sparbetrag_mtlValue = (float)(Sparbetrag_mtlEntry.get())
         LaufzeitValue = (int)(LaufzeitEntry.get())
         ZinsenValue = (float)(ZinsenEntry.get())
-        Zinsen_mtlValue = (ZinsenValue / 12)
+        Zinsen_mtlValue = (float)(ZinsenValue / 12)
         if DEBUG:
             print("Startbetrag    Sparbetrag (mtl.)    Laufzeit    Zinsen (jähl.)")
             print("%f    %f    %f    %f" %(StartbetragValue, Sparbetrag_mtlValue, LaufzeitValue, ZinsenValue))
@@ -62,6 +65,12 @@ def on_entry(event):
 
             Zwischenwert = Zwischenwert + Sparbetrag_mtlValue
 
+        #### Plotten der Daten
+        x = range(1, LaufzeitValue+1)
+        y = Monatsbetraege
+        ax.plot(x, y, 'o', markersize=5)
+        canvas.draw()  # Rendern des Diagramms
+
     except:
         EndbetragEntry.delete(0, tk.END)
         EndbetragEntry.insert(0, "Fehler")
@@ -76,17 +85,13 @@ def close_window(event):
 
 #### Create the main window
 root = tk.Tk()
-root.geometry("430x450")
+#root.geometry("850x450")
 root.title("Sparbetrag")
 
 #### Zwei Frames benutzen: Links Eingabefelder und Ausgabe für Endbetrag; Rechts detailierte Übersicht des Anwachsens des Entbetrages.
 FrameLinks = tk.Frame(root)
-FrameLinks.pack()
-FrameLinks.pack(side = tk.LEFT)
-
+FrameMitte = tk.Frame(root)
 FrameRechts = tk.Frame(root)
-FrameRechts.pack()
-FrameRechts.pack(side = tk.RIGHT)
 
 #### Eingabefelder erzeugen
 StartbetragEntry = tk.Entry(FrameLinks)
@@ -95,13 +100,21 @@ LaufzeitEntry = tk.Entry(FrameLinks)
 ZinsenEntry = tk.Entry(FrameLinks)
 EndbetragEntry = tk.Entry(FrameLinks)
 
+#### Textfeld und Scrollbar erzeugen:
+Textfeld = scrolledtext.ScrolledText(master=FrameMitte, width=30, height=20, wrap='word')
 
-#### Textfeld erzeugen:
-Textfeld = tk.Text(master=FrameRechts, width=39, height=23, wrap='word')
-S = Scrollbar(master=FrameRechts)
-S.pack(side=RIGHT, fill=Y)
-S.config(command=Textfeld.yview)
-Textfeld.config(yscrollcommand=S.set)
+#### Erstelle ein Figure-Objekt und Canvas Objektes zum Plotten der berechneten Werte
+fig = Figure(figsize=(5, 4), dpi=100)
+#### Füge eine Subplot-Achse hinzu
+ax = fig.add_subplot(111)
+ax.set(xlabel='Monat', ylabel='Sparbetrag')
+ax.grid()
+
+#### Einfügen der Figure in das Tkinter-Fenster
+canvas = FigureCanvasTkAgg(fig, master=FrameRechts)
+#### Rendern des Diagramms
+canvas.draw()
+
 
 #### Labels für die Eingabefelder erzeugen
 label1 = tk.Label(FrameLinks, text="Startbetrag", anchor="e")
@@ -109,7 +122,8 @@ label2 = tk.Label(FrameLinks, text="Sparbetrag (mtl)")
 label3 = tk.Label(FrameLinks, text="Laufzeit (Monate)")
 label4 = tk.Label(FrameLinks, text="Zinsen (jährl) (5% = 0.05)")
 label5 = tk.Label(FrameLinks, text="Endbetrag")
-label6 = tk.Label(FrameRechts, text="Details")
+label6 = tk.Label(FrameMitte, text="Details")
+label7 = tk.Label(FrameRechts, text="Verlauf")
 
 #### Default Werte in die Eingabefelder einfügen
 StartbetragEntry.insert(0, "0.0")
@@ -133,20 +147,32 @@ ZinsenEntry.bind("<Return>", on_entry)
 root.bind("<Escape>", close_window)
 
 #### Pack the labels and entry fields into the window
+#### Alles packen
+FrameLinks.pack(side = tk.LEFT)
+FrameMitte.pack(side = tk.LEFT)
+FrameRechts.pack(side = tk.RIGHT)
+
 label1.pack(padx=10, pady=5)
 StartbetragEntry.pack(padx=10, pady=5)
+
 label2.pack(padx=10, pady=5)
 Sparbetrag_mtlEntry.pack(padx=10, pady=5)
+
 label3.pack(padx=10, pady=5)
 LaufzeitEntry.pack(padx=10, pady=5)
+
 label4.pack(padx=10, pady=5)
 ZinsenEntry.pack(padx=10, pady=5)
+
 label5.pack(padx=10, pady=5)
 EndbetragEntry.pack(padx=10, pady=5)
+
 label6.pack(side = tk.TOP, padx=10, pady=5)
 Textfeld.pack(side = tk.TOP, padx=5, pady=5)
+
+label7.pack(side = tk.TOP, padx=10, pady=5)
+canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
 #### Start the Tkinter event loop
 os.system('cls')
 root.mainloop()
-
