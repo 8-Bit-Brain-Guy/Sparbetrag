@@ -66,6 +66,13 @@ def on_entry(event):
 
             Zwischenwert = Zwischenwert + Sparbetrag_mtlValue
 
+        #### Plotten der Daten
+        x = range(1, LaufzeitValue+1)
+        y = Monatsbetraege
+        ax.plot(x, y)
+        canvas.draw()  # Rendern des Diagramms
+
+
     except:
         EndbetragEntry.delete(0, tk.END)
         EndbetragEntry.insert(0, "Fehler")
@@ -98,15 +105,15 @@ EndbetragEntry = tk.Entry(FrameLinks)
 #### Textfeld und Scrollbar erzeugen:
 Textfeld = scrolledtext.ScrolledText(master=FrameMitte, width=30, height=20, wrap='word')
 
-#### Label erzeugen, Bild laden und in Label einfügen:
-image = Image.open("Verlauf.png")  # Pfad zu deinem Bild
-image = image.resize((300, 300))  # Bildgröße anpassen
-# image = image.resize((200, 200), Image.ANTIALIAS)  # Bildgröße anpassen
-photo = ImageTk.PhotoImage(image)
-
-
-
-
+#### Erstelle ein Figure-Objekt und Canvas Objektes zum Plotten der berechneten Werte
+fig = Figure(figsize=(5, 4), dpi=100)
+#### Füge eine Subplot-Achse hinzu
+ax = fig.add_subplot(111)
+#### Einfügen der Figure in das Tkinter-Fenster
+canvas = FigureCanvasTkAgg(fig, master=FrameRechts)
+#### Rendern des Diagramms
+canvas.draw()
+canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
 
 #### Labels für die Eingabefelder erzeugen
@@ -117,7 +124,6 @@ label4 = tk.Label(FrameLinks, text="Zinsen (jährl) (5% = 0.05)")
 label5 = tk.Label(FrameLinks, text="Endbetrag")
 label6 = tk.Label(FrameMitte, text="Details")
 label7 = tk.Label(FrameRechts, text="Verlauf")
-LabelBild = tk.Label(FrameRechts, image=photo)
 
 #### Default Werte in die Eingabefelder einfügen
 StartbetragEntry.insert(0, "0.0")
@@ -165,8 +171,8 @@ label6.pack(side = tk.TOP, padx=10, pady=5)
 Textfeld.pack(side = tk.TOP, padx=5, pady=5)
 
 label7.pack(side = tk.TOP, padx=10, pady=5)
-LabelBild.pack()
+
 
 #### Start the Tkinter event loop
-#os.system('cls')
+os.system('cls')
 root.mainloop()
