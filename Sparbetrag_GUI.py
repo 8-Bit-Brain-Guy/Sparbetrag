@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import scrolledtext
 import tkinter as tk
-from PIL import Image, ImageTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import os
@@ -69,9 +68,8 @@ def on_entry(event):
         #### Plotten der Daten
         x = range(1, LaufzeitValue+1)
         y = Monatsbetraege
-        ax.plot(x, y)
+        ax.plot(x, y, 'o', markersize=5)
         canvas.draw()  # Rendern des Diagramms
-
 
     except:
         EndbetragEntry.delete(0, tk.END)
@@ -109,11 +107,13 @@ Textfeld = scrolledtext.ScrolledText(master=FrameMitte, width=30, height=20, wra
 fig = Figure(figsize=(5, 4), dpi=100)
 #### Füge eine Subplot-Achse hinzu
 ax = fig.add_subplot(111)
+ax.set(xlabel='Monat', ylabel='Sparbetrag')
+ax.grid()
+
 #### Einfügen der Figure in das Tkinter-Fenster
 canvas = FigureCanvasTkAgg(fig, master=FrameRechts)
 #### Rendern des Diagramms
 canvas.draw()
-canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
 
 #### Labels für die Eingabefelder erzeugen
@@ -171,7 +171,7 @@ label6.pack(side = tk.TOP, padx=10, pady=5)
 Textfeld.pack(side = tk.TOP, padx=5, pady=5)
 
 label7.pack(side = tk.TOP, padx=10, pady=5)
-
+canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
 #### Start the Tkinter event loop
 os.system('cls')
