@@ -16,7 +16,7 @@ frame = Frame(root, width=300, height=300)
 frame.pack(padx=10, pady=10)
 
 # Load an image using Pillow
-image = Image.open("Verlauf.png")  # Pfad zu deinem Bild
+image = Image.open("Verlauf_Demo.png")  # Pfad zu deinem Bild
 image = image.resize((200, 200))  # Bildgröße anpassen
 photo = ImageTk.PhotoImage(image)
 
